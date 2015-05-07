@@ -4,14 +4,14 @@
   "description": "An application that uses MEAN stack",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js",
+    "test-route": "jasmine-node spec/routes.spec.js",
+    "test-user": "jasmine-node spec/user.spec.js",
+    "test-event": "jasmine-node spec/event.spec.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andela-ofamakinde/mean-stack.git"
-  },
-  "scripts" :{
-    "start" : "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +26,7 @@
     "mongoose": "^4.0.2"
   },
   "devDependencies": {
-    "jasmine-node": "^1.14.5"
+    "jasmine-node": "^1.14.5",
+    "supertest": "^0.15.0"
   }
 }

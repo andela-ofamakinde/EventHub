@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 require('./routes')(app);
 
 app.listen(config.port,function(){
-  console.log("Listening on port "+config.port);
+  console.log("Listening on port "+ config.port);
 });
 module.exports = app;
 

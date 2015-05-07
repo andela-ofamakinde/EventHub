@@ -1,53 +1,42 @@
 var mongoose = require('mongoose');
-var express = require('express');
-var supertest = require('supertest');
-var server = require('../server');
-var user = mongoose.model('user');
+require('../routes');
+var myApp = require('../server');
+var tester = require('supertest')(myApp);
+var user =mongoose.model('user');
 var newUser;
 
-describe('tests for routes', function() {
-  beforeEach(function(done) {
-    newUser = new user({firstname : 'toyosi',
-        lastname : 'fam',
-        email : 'me@gahoo.com',
-        password : 'sugar'});
+describe('my api', function(){
 
-     newUser.save(function(err){
-        if(err) console.log(err);
-      });
-      done();
-});
- afterEach(function(done) {
-    newUser.remove(function(err){
-      if(err) {
-        console.log(err);
-      }
+  beforeEach(function(){
+    newUser = new user({
+      firstname: 'olatoyosi',
+      lastname: "fam",
+      password: "sugar",
+      email: "me@you.com",
     });
+  });
+
+  it('should return an error message for a non existing route', function(done){
+    tester
+    .get('/errorroute')
+    .expect(404, 'Cannot GET /errorroute\n');
     done();
   });
 
-it('should add a new user to the database', function(done) {
-
-supertest(server).post('/signUp')
-    .send({
-    firstname : 'toyosi',
-    lastname : 'fam',
-    email : 'me@gahoo.com',
-    password : 'sugar'
-  })
-  .set('Accept', 'application/json')
-  .expect('Content-Type', /json/)
-  .expect(200)
-  .end(function(err, res) {
-    if(err) {
-        console.log(err);
-    }
-    else{  
-    expect(res.body).toEqual(jasmine.objectContaining(res));
-    }
+  it('should create a user',function(done){
+    newUser = {
+      firstname: 'olatoyosi',
+      lastname: "fam",
+      password: "sugar",
+      email: "me@you.com",
+    };
+    tester
+    .post('/signUp')
+    .send(newUser)
+    .expect(201);
     done();
-  });
-
   });
 });
+
+
 
