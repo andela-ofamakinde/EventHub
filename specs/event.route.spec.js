@@ -64,7 +64,7 @@ describe('my api', function(){
 
   it('should be able to get all events saved', function(done){
     tester
-    .get('/getAllEventss')
+    .get('/getAllEvents')
     .set('Accept', 'application/json')
     .expect('Content-Type', "text/html; charset=utf-8")
     .expect(200)
@@ -84,6 +84,24 @@ describe('my api', function(){
     done();
     });
   });
+
+    it('should contain an empty array when user is deleted', function(done){
+    tester
+    .get('/deleteEvent/:newEvent_id')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', "text/html; charset=utf-8")
+    .expect(200)
+    .end(function(err, res) {
+    if(err) {
+        console.log(err);
+    }
+    else{  
+      expect(res.body).toEqual(jasmine.objectContaining());
+    }
+    done();
+    });
+  });
+
 
 });
 
