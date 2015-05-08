@@ -1,6 +1,13 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var joinedUserSchema = new Schema ({
+  user: {
+    type: String,
+    unique: true
+  }
+});
+
 var eventSchema = new Schema({
   title: {
     type: String,
@@ -18,7 +25,7 @@ var eventSchema = new Schema({
     type: Date,
     required: 'Please enter the end date'
   },
-  categories: {
+  category: {
     type: String,
     required: 'Please enter the category'
   },
@@ -26,11 +33,11 @@ var eventSchema = new Schema({
     type: Schema.ObjectId, 
     ref: 'user'
   },
-  joinedUsers: [{
-    type: Schema.ObjectId,
-    ref: 'user'
-  }]
+  joinedUsers: [joinedUserSchema]
   
 });
 
-mongoose.model('events', eventSchema);
+module.exports = {
+  joinedUser : mongoose.model('joinedUser', joinedUserSchema),
+  events:    mongoose.model('events', eventSchema)
+}

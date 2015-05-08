@@ -1,13 +1,17 @@
 var mongoose = require('mongoose');
-require('../models/event.model');
-var Event = mongoose.model('events');
+var Event = require('../models/event.model').events;
+//var Event = mongoose.model('events'),
+_ = require('lodash');
+
+var JoinedUser = mongoose.model('joinedUser');
 
 exports.createEvent = function(req, res){
+  console.log('welcome');
   Event.create(req.body, function(err, events){
     if (err){
       res.send(err);
     }
-    res.json({success: 'Event Created'});
+    res.json(events);
   });
 };
 
@@ -16,7 +20,7 @@ exports.getAllEvents = function(req, res){
     if (err){
       res.send(err);
     }
-    res.json({success : 'All events are here'});
+    res.json(events);
   });
 };
 
@@ -25,7 +29,7 @@ exports.getOneEvent = function(req, res) {
     if (err){
       res.send(err);
     }
-      res.json({success : 'This is the single event'});
+      res.json(event);
   });
 };
 
@@ -49,17 +53,40 @@ exports.updateEvent = function(req, res) {
 };
 
 exports.joinEvent = function(req, res) {
-  Event.findById(req.params.event_id, function(err, event) {
-    if (err) {
-      res.send(err);
+  // Event.findByIdAndUpdate(req.params.event_id, { joinedUsers: { $addToSet: req.body}}, function(err, event) {
+  //   console.log(err)
+  //   console.log(event)
+  // });
+  Event.findById(req.params.event_id, function(err, events) {
+    
+    if(err) return err;
+    console.log(events, 'can join eventsss');
+    console.log(events.joinedUsers);
+    if(events.joinedUsers.length == 0){
+      console.log( req.body );
+       events.joinedUsers.push(req.body);
+      events.save(function(err){
+        if (err){
+          res.send(err);
+        }
+        res.json(events);
+        });
     }
-    event.joinedUsers.push(req.body.userId);
-    event.save(function(err){
-      if (err){
-        res.send(err);
+    else{
+      //console.log( "added");
+      if(!_.result(_.find(events.joinedUsers, req.body), 'user')){
+        console.log('asdgfhg');
+        
+            events.joinedUsers.push(req.body);
+            events.save(function(err){
+              if (err){
+                res.send(err);
+              }
+              res.json(events);
+            });
+          }
+          else return res.json('user exist');
       }
-      res.json({message : 'Succesfully joined event'});
-    });
   });
 };
 

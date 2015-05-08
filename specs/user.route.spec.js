@@ -47,12 +47,7 @@ describe('my api', function(){
         console.log(err);
     }
     else{  
-    expect(res.body).toEqual(jasmine.objectContaining({
-      firstname: 'olatoyosi',
-      lastname: "fam",
-      password: "sugar",
-      email: "me@you.com",
-    }));
+    expect(res.body).toEqual(jasmine.objectContaining(res));
     }
     done();
     });
@@ -69,12 +64,7 @@ describe('my api', function(){
         console.log(err);
     }
     else{  
-    expect(res.body).toEqual(jasmine.objectContaining({
-      firstname: 'olatoyosi',
-      lastname: "fam",
-      password: "sugar",
-      email: "me@you.com",
-    }));
+    expect(res.body).toEqual(jasmine.objectContaining(res));
     }
     done();
     });
