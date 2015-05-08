@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Event = require('../models/event.model').events;
-//var Event = mongoose.model('events'),
 _ = require('lodash');
 
 var JoinedUser = mongoose.model('joinedUser');
@@ -53,18 +52,13 @@ exports.updateEvent = function(req, res) {
 };
 
 exports.joinEvent = function(req, res) {
-  // Event.findByIdAndUpdate(req.params.event_id, { joinedUsers: { $addToSet: req.body}}, function(err, event) {
-  //   console.log(err)
-  //   console.log(event)
-  // });
+ 
   Event.findById(req.params.event_id, function(err, events) {
     
     if(err) return err;
-    console.log(events, 'can join eventsss');
-    console.log(events.joinedUsers);
-    if(events.joinedUsers.length == 0){
+    if(events.joinedUsers.length === 0){
       console.log( req.body );
-       events.joinedUsers.push(req.body);
+      events.joinedUsers.push(req.body);
       events.save(function(err){
         if (err){
           res.send(err);
@@ -73,10 +67,7 @@ exports.joinEvent = function(req, res) {
         });
     }
     else{
-      //console.log( "added");
       if(!_.result(_.find(events.joinedUsers, req.body), 'user')){
-        console.log('asdgfhg');
-        
             events.joinedUsers.push(req.body);
             events.save(function(err){
               if (err){

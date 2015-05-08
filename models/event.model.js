@@ -40,4 +40,4 @@ var eventSchema = new Schema({
 module.exports = {
   joinedUser : mongoose.model('joinedUser', joinedUserSchema),
   events:    mongoose.model('events', eventSchema)
-}
+};
