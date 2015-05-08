@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test-route": "jasmine-node spec/routes.spec.js",
+    "test-user-route": "jasmine-node spec/user.route.spec.js",
+    "test-event-route": "jasmine-node spec/event.route.spec.js",
     "test-user": "jasmine-node spec/user.spec.js",
     "test-event": "jasmine-node spec/event.spec.js"
   },

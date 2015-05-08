@@ -7,7 +7,7 @@ exports.createUser = function(req, res){
   console.log(req.body);
   User.create(req.body, function(err, user){
     if(err){
-      res.send(err)
+      res.send(err);
     }
     res.json({success: 'User created'});
   });
@@ -16,9 +16,9 @@ exports.createUser = function(req, res){
 exports.getAllUser = function(req, res){
   User.find(function(err, user){
     if (err){
-      return res.send(err)
+      return res.send(err);
     }
-    res.json(user);
+    res.json({success: 'All users displayed'});
   });
 };
 
@@ -28,7 +28,7 @@ exports.deleteUser = function(req, res){
       },
     function(err, user){
       if (err){
-        res.send(err)
+        res.send(err);
       }
       res.json(user);
   });
