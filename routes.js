@@ -6,6 +6,7 @@ module.exports = function(app) {
   //USER ROUTES
   app.post('/signUp', userCtrl.createUser);
   app.get('/getAllUsers', userCtrl.getAllUser);
+  app.get('/getUser/:user_id', eventCtrl.getOneUser);
   app.delete('/deleteUser', userCtrl.deleteUser);
 
   // EVENT ROUTES

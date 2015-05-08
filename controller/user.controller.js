@@ -9,7 +9,7 @@ exports.createUser = function(req, res){
     if(err){
       res.send(err);
     }
-    res.json({success: 'User created'});
+    res.json(user);
   });
 };
 
@@ -19,6 +19,15 @@ exports.getAllUser = function(req, res){
       return res.send(err);
     }
     res.json({success: 'All users displayed'});
+  });
+};
+
+exports.getOneUser = function(req, res) {
+  Event.findById(req.params.user_id, function(err, user) {
+    if (err){
+      res.send(err);
+    }
+      res.json({success : 'This is the single user'});
   });
 };
 
