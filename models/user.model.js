@@ -18,6 +18,9 @@ var userSchema = new Schema({
     type: String,
     // required: 'Please enter your email'
   },
+  token: {
+    type: String
+  },
   eventsCreated: [{
     type: Schema.ObjectId,
     ref: 'events'
