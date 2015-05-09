@@ -1,4 +1,5 @@
 require('../models/event.model');
+require('../config/config');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/mydatabase');

@@ -4,7 +4,11 @@
   "description": "An application that uses MEAN stack",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js",
+    "test-user-route": "jasmine-node specs/user.route.spec.js",
+    "test-event-route": "jasmine-node specs/event.route.spec.js",
+    "test-user": "jasmine-node specs/user.model.spec.js",
+    "test-event": "jasmine-node specs/event.model.spec.js"
   },
   "repository": {
     "type": "git",
@@ -19,10 +23,12 @@
   "dependencies": {
     "body-parser": "^1.12.3",
     "express": "^4.12.3",
+    "lodash": "^3.8.0",
     "method-override": "^2.3.2",
     "mongoose": "^4.0.2"
   },
   "devDependencies": {
-    "jasmine-node": "^1.14.5"
+    "jasmine-node": "^1.14.5",
+    "supertest": "^0.15.0"
   }
 }

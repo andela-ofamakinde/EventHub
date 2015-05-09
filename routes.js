@@ -3,18 +3,17 @@ module.exports = function(app) {
   var userCtrl = require('./controller/user.controller');
   var eventCtrl = require('./controller/event.controller');
 
-  app.post('/signUp', userCtrl.createUser);
-  app.get('/getAllUsers', userCtrl.getAllUser);
-  app.delete('/deleteUser', userCtrl.deleteUser);
-
+  //USER ROUTES
+  app.post('/signup', userCtrl.createUser);
+  app.get('/allusers', userCtrl.getAllUser);
+  app.get('/allusers/user/:user_id', userCtrl.getOneUser);
+  app.delete('/allusers/:user_id', userCtrl.deleteUser);
 
   // EVENT ROUTES
-  app.post('/createEvent', eventCtrl.createEvent);
-  app.get('/getAllEvents', eventCtrl.getAllEvents);
-
-  app.get('/getEvent/:event_id', eventCtrl.getOneEvent);
-  app.put('/editEvent/:event_id', eventCtrl.updateEvent);
-  app.post('/joinEvent/:event_id', eventCtrl.joinEvent);
+  app.post('/createevent', eventCtrl.createEvent);
+  app.get('/allevents', eventCtrl.getAllEvents);
+  app.get('/allevents/:event_id', eventCtrl.getOneEvent);
+  app.put('/allevents/:event_id', eventCtrl.updateEvent);
+  app.post('/allevents/:event_id/joinevent', eventCtrl.joinEvent);
   app.delete('/deleteEvent/:event_id', eventCtrl.deleteEvent);
-
-}
+};

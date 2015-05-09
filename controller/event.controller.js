@@ -1,11 +1,14 @@
 var mongoose = require('mongoose');
-require('../models/event.model');
-var Event = mongoose.model('events');
+var Event = require('../models/event.model').events;
+_ = require('lodash');
+
+var JoinedUser = mongoose.model('joinedUser');
 
 exports.createEvent = function(req, res){
+  console.log('welcome');
   Event.create(req.body, function(err, events){
     if (err){
-      res.send(err)
+      res.send(err);
     }
     res.json(events);
   });
@@ -14,7 +17,7 @@ exports.createEvent = function(req, res){
 exports.getAllEvents = function(req, res){
   Event.find(function(err, events){
     if (err){
-      res.send(err)
+      res.send(err);
     }
     res.json(events);
   });
@@ -49,17 +52,32 @@ exports.updateEvent = function(req, res) {
 };
 
 exports.joinEvent = function(req, res) {
-  Event.findById(req.params.event_id, function(err, event) {
-    if (err) {
-      res.send(err);
+ 
+  Event.findById(req.params.event_id, function(err, events) {
+    
+    if(err) return err;
+    if(events.joinedUsers.length === 0){
+      console.log( req.body );
+      events.joinedUsers.push(req.body);
+      events.save(function(err){
+        if (err){
+          res.send(err);
+        }
+        res.json(events);
+        });
     }
-    event.joinedUsers.push(req.body.userId);
-    event.save(function(err){
-      if (err){
-        res.send(err);
+    else{
+      if(!_.result(_.find(events.joinedUsers, req.body), 'user')){
+            events.joinedUsers.push(req.body);
+            events.save(function(err){
+              if (err){
+                res.send(err);
+              }
+              res.json(events);
+            });
+          }
+          else return res.json('user exist');
       }
-      res.json({message : 'Succesfully joined event'});
-    });
   });
 };
 

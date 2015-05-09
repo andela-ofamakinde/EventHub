@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var config = require('./config/config');
 
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -10,5 +11,8 @@ app.use(bodyParser.json());
 
 require('./routes')(app);
 
-app.listen(3000);
-console.log('listening on port 3000');
+app.listen(config.port,function(){
+  console.log("Listening on port "+ config.port);
+});
+module.exports = app;
+
