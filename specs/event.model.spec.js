@@ -18,7 +18,7 @@ describe('Event model test', function() {
     it('should throw an error', function(done){
       myEvent.title = '';
       myEvent.save(function(error){
-        expect(error).toBeNull();
+        expect(error).toBeDefined();
         console.log(error);
         done();
       });
