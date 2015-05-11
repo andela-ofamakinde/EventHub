@@ -42,7 +42,7 @@ exports.getAllUser = function(req, res){
     if (err){
       return res.send(err);
     }
-    res.json({success: 'All users displayed'});
+    res.json(user);
   });
 };
 
@@ -51,7 +51,7 @@ exports.getOneUser = function(req, res) {
     if (err){
       res.send(err);
     }
-      res.json({success : 'This is the single user'});
+      res.json(user);
   });
 };
 
@@ -86,16 +86,5 @@ exports.ensureAuthorized = function(req, res, next) {
       success: false, 
       message: 'No token provided.' 
     });
-  // var bearerToken;
-  // var bearerHeader = req.headers["authorization"];
-  // console.log(bearerHeader);
-  // if (typeof bearerHeader !== 'undefined') {
-  //     var bearer = bearerHeader.split(" ");
-  //     bearerToken = bearer[1];
-  //     req.token = bearerToken;
-  //     next();
-  // } else {
-  //     res.sendStatus(403);
-  // }
   }
 };
