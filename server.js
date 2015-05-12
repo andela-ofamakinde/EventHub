@@ -1,10 +1,11 @@
+"use strict";
 var express = require('express');
 var app = express();
 var config = require('./config/config');
 var morgan =  require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/mydatabase');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/eventhubdb');
 
 app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(bodyParser.json()); 

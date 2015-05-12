@@ -1,3 +1,4 @@
+"use strict";
 var mongoose = require('mongoose');
 require('../routes');
 var myApp = require('../server');

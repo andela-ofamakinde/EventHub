@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
+    "tests": "jasmine-node specs/*.js",
     "test-user-route": "jasmine-node specs/user.route.spec.js",
     "test-event-route": "jasmine-node specs/event.route.spec.js",
     "test-user": "jasmine-node specs/user.model.spec.js",
@@ -21,6 +22,7 @@
   },
   "homepage": "https://github.com/andela-ofamakinde/mean-stack#readme",
   "dependencies": {
+    "bcrypt": "^0.8.3",
     "body-parser": "^1.12.3",
     "express": "^4.12.3",
     "jsonwebtoken": "^5.0.0",
@@ -32,5 +34,8 @@
   "devDependencies": {
     "jasmine-node": "^1.14.5",
     "supertest": "^0.15.0"
+  },
+  "engines": {
+    "node": "0.12.2"
   }
 }

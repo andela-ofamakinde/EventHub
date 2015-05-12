@@ -1,37 +1,55 @@
+"use strict";
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
+var bcrypt = require('bcrypt');
 
 require('../models/user.model');
-var User = mongoose.model('user');
+var User = mongoose.model('User');
 
 exports.createUser = function(req, res){
   console.log(req.body);
   var user = req.body;
   user.token = jwt.sign(user, config.secret);
 
-  User.create(user, function(err, user){
-    if(err){
-      res.send(err);
-    }
-    res.json(user);
+  bcrypt.hash(req.body.password, 10, function(err, hash) {
+    user.password = hash;
+
+    User.create(user, function(err, user) {
+      if (err) {
+        res.send(err);
+      } 
+      res.send(user);
+    });
+
   });
 };
 
 exports.signIn = function(req, res){
-  User.findOne({email: req.body.email, password: req.body.password}, 
+  User.findOne({ email: req.body.email }, 
     function(err, user) {
-      if (err){
-        res.send(err);
-      } 
 
       if (!user) {
-        res.json({ success: false, message: 'Authentication failed. Incorrect email/password.' });
+        res.json({ success: false,
+          message: 'Authentication failed. Incorrect email/password.' 
+        });
+
       } else if (user) {
-        res.json({
-          success: true,
-          message: 'Enjoy your token',
-          token: user.token
+
+        bcrypt.compare(req.body.password, user.password, function(err, valid){
+
+          if (err){
+            res.send(err);
+          } 
+
+          if (!valid) { return res.status(401).send('Wrong Password'); }
+
+          res.json({
+            success: true,
+            message: 'Enjoy your token',
+            token: user.token
+          });
+
         });
       }
   });

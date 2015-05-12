@@ -1,3 +1,4 @@
+"use strict";
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -16,7 +17,9 @@ var userSchema = new Schema({
   }, 
   email: {
     type: String,
-    required: 'Please enter your email'
+    required: 'Please enter your email',
+    unique: true,
+    dropDups: true
   },
   token: {
     type: String
@@ -31,4 +34,4 @@ var userSchema = new Schema({
   }]
 
 });
-exports.model = mongoose.model('user', userSchema);
+exports.model = mongoose.model('User', userSchema);
