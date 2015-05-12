@@ -5,7 +5,6 @@ var _ = require('lodash');
 var JoinedUser = mongoose.model('JoinedUser');
 
 exports.createEvent = function(req, res){
-  console.log('welcome');
   Event.create(req.body, function(err, events){
     if (err){
       res.send(err);
@@ -57,7 +56,6 @@ exports.joinEvent = function(req, res) {
     
     if(err) return err;
     if(events.joinedUsers.length === 0){
-      console.log( req.body );
       events.joinedUsers.push(req.body);
       events.save(function(err){
         if (err){

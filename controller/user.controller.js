@@ -8,7 +8,6 @@ require('../models/user.model');
 var User = mongoose.model('User');
 
 exports.createUser = function(req, res){
-  console.log(req.body);
   var user = req.body;
   user.token = jwt.sign(user, config.secret);
 
