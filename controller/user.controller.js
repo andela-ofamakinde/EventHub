@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
+var bcrypt = require('bcrypt');
 
 require('../models/user.model');
 var User = mongoose.model('User');
@@ -11,11 +12,16 @@ exports.createUser = function(req, res){
   var user = req.body;
   user.token = jwt.sign(user, config.secret);
 
-  User.create(user, function(err, user){
-    if(err){
-      res.send(err);
-    }
-    res.json(user);
+  bcrypt.hash(req.body.password, 10, function(err, hash) {
+    user.password = hash;
+
+    User.create(user, function(err, user) {
+      if (err) {
+        res.send(err);
+      } 
+      res.send(user);
+    });
+    
   });
 };
 

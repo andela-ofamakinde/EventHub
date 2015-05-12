@@ -17,7 +17,9 @@ var userSchema = new Schema({
   }, 
   email: {
     type: String,
-    required: 'Please enter your email'
+    required: 'Please enter your email',
+    unique: true,
+    dropDups: true
   },
   token: {
     type: String

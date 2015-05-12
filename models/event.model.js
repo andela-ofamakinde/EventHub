@@ -13,7 +13,8 @@ var joinedUserSchema = new Schema ({
 var eventSchema = new Schema({
   title: {
     type: String,
-    required: 'Please Enter the event title'
+    required: 'Please Enter the event title',
+    unique: true
   },
   description: {
     type: String,

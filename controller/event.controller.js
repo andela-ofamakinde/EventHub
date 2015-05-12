@@ -2,7 +2,6 @@
 var mongoose = require('mongoose');
 var Event = require('../models/event.model').Events;
 var _ = require('lodash');
-
 var JoinedUser = mongoose.model('JoinedUser');
 
 exports.createEvent = function(req, res){
