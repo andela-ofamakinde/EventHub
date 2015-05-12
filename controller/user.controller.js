@@ -21,26 +21,35 @@ exports.createUser = function(req, res){
       } 
       res.send(user);
     });
-    
+
   });
 };
 
 exports.signIn = function(req, res){
-  User.findOne({email: req.body.email, password: req.body.password}, 
+  User.findOne({ email: req.body.email }, 
     function(err, user) {
-      if (err){
-        res.send(err);
-      } 
 
       if (!user) {
         res.json({ success: false,
-        message: 'Authentication failed. Incorrect email/password.' 
-      });
+          message: 'Authentication failed. Incorrect email/password.' 
+        });
+
       } else if (user) {
-        res.json({
-          success: true,
-          message: 'Enjoy your token',
-          token: user.token
+
+        bcrypt.compare(req.body.password, user.password, function(err, valid){
+
+          if (err){
+            res.send(err);
+          } 
+
+          if (!valid) { return res.status(401).send('Wrong Password'); }
+
+          res.json({
+            success: true,
+            message: 'Enjoy your token',
+            token: user.token
+          });
+
         });
       }
   });
