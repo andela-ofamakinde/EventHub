@@ -1,3 +1,5 @@
+"use strict";
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -31,13 +33,14 @@ var eventSchema = new Schema({
   },
   userId: {
     type: Schema.ObjectId, 
-    ref: 'user'
+    ref: 'user',
+    required: "Please enter the user ID"
   },
   joinedUsers: [joinedUserSchema]
   
 });
 
 module.exports = {
-  joinedUser : mongoose.model('joinedUser', joinedUserSchema),
-  events:    mongoose.model('events', eventSchema)
+  JoinedUser : mongoose.model('JoinedUser', joinedUserSchema),
+  Events:    mongoose.model('Events', eventSchema)
 };

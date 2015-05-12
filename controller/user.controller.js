@@ -1,9 +1,10 @@
+"use strict";
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 
 require('../models/user.model');
-var User = mongoose.model('user');
+var User = mongoose.model('User');
 
 exports.createUser = function(req, res){
   console.log(req.body);
@@ -26,7 +27,9 @@ exports.signIn = function(req, res){
       } 
 
       if (!user) {
-        res.json({ success: false, message: 'Authentication failed. Incorrect email/password.' });
+        res.json({ success: false,
+        message: 'Authentication failed. Incorrect email/password.' 
+      });
       } else if (user) {
         res.json({
           success: true,

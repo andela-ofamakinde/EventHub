@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function(app) {
 
   var userCtrl = require('./controller/user.controller');
@@ -16,5 +18,6 @@ module.exports = function(app) {
   app.get('/allevents/:event_id', eventCtrl.getOneEvent);
   app.put('/allevents/:event_id', eventCtrl.updateEvent);
   app.post('/allevents/:event_id/joinevent', eventCtrl.joinEvent);
+  app.get('/allevents/:event_id/viewusers', eventCtrl.viewUsers);
   app.delete('/deleteEvent/:event_id', eventCtrl.deleteEvent);
 };
