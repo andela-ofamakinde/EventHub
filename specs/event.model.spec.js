@@ -1,3 +1,4 @@
+"use strict";
 require('../models/event.model');
 require('../config/config');
 

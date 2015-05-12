@@ -1,8 +1,8 @@
+"use strict";
 var mongoose = require('mongoose');
-var Event = require('../models/event.model').events;
-_ = require('lodash');
-
-var JoinedUser = mongoose.model('joinedUser');
+var Event = require('../models/event.model').Events;
+var _ = require('lodash');
+var JoinedUser = mongoose.model('JoinedUser');
 
 exports.createEvent = function(req, res){
   console.log('welcome');
@@ -45,7 +45,7 @@ exports.updateEvent = function(req, res) {
       if (err){
         res.send(err);
       }
-      res.json({message : 'event updated'});
+      res.json(event);
     });
   });
 
@@ -87,6 +87,15 @@ exports.deleteEvent = function(req, res) {
       res.send(err);
     }
     res.json({ message: ' Event Successfully deleted' });
+  });
+};
+
+exports.viewUsers = function(req, res) {
+  Event.findById(req.params.event_id, function(err , event) {
+    if(err){
+      res.send(err);
+    }
+    res.send(event.joinedUsers);
   });
 };
 
