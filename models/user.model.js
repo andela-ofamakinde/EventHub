@@ -26,11 +26,11 @@ var userSchema = new Schema({
   },
   eventsCreated: [{
     type: Schema.ObjectId,
-    ref: 'events'
+    ref: 'Events'
   }],
   eventsJoined: [{
     type: Schema.ObjectId,
-    ref: 'events'
+    ref: 'Events'
   }]
 
 });

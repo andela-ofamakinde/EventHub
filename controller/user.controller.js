@@ -9,7 +9,6 @@ var User = mongoose.model('User');
 
 exports.createUser = function(req, res){
   var user = req.body;
-  user.token = jwt.sign(user, config.secret);
 
   bcrypt.hash(req.body.password, 10, function(err, hash) {
     user.password = hash;
@@ -34,6 +33,9 @@ exports.signIn = function(req, res){
         });
 
       } else if (user) {
+        var token = jwt.sign(user, config.secret, {
+          expiresInMinutes : 1440
+        });
 
         bcrypt.compare(req.body.password, user.password, function(err, valid){
 
@@ -46,7 +48,7 @@ exports.signIn = function(req, res){
           res.json({
             success: true,
             message: 'Enjoy your token',
-            token: user.token
+            token: token
           });
 
         });

@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Event = require('../models/event.model').Events;
 var _ = require('lodash');
-var JoinedUser = mongoose.model('JoinedUser');
+// var JoinedUser = mongoose.model('JoinedUser');
 
 exports.createEvent = function(req, res){
   Event.create(req.body, function(err, events){
@@ -51,7 +51,7 @@ exports.updateEvent = function(req, res) {
 };
 
 exports.joinEvent = function(req, res) {
- 
+
   Event.findById(req.params.event_id, function(err, events) {
     
     if(err) return err;
@@ -64,7 +64,7 @@ exports.joinEvent = function(req, res) {
         res.json(events);
         });
     }
-    else{
+    else {
       if(!_.result(_.find(events.joinedUsers, req.body), 'user')){
             events.joinedUsers.push(req.body);
             events.save(function(err){
@@ -74,7 +74,7 @@ exports.joinEvent = function(req, res) {
               res.json(events);
             });
           }
-          else return res.json('user exist');
+          else return res.json('userId exist');
       }
   });
 };
