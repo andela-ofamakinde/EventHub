@@ -32,6 +32,10 @@ var eventSchema = new Schema({
     type: String,
     required: 'Please enter the category'
   },
+  location: {
+    type: String,
+    required: 'Please enter the location'
+  },
   userId: {
     type: Schema.ObjectId, 
     ref: 'User',
