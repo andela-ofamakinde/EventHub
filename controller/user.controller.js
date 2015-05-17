@@ -16,9 +16,17 @@ exports.createUser = function(req, res){
     User.create(user, function(err, user) {
       if (err) {
         res.send(err);
-      } 
-      res.send(user);
+      }
+
+    var token = jwt.sign(user, config.secret, {
+      expiresInMinutes : 1440
     });
+
+    res.json({
+      user: user,
+      token: token
+    });
+  });
 
   });
 };
