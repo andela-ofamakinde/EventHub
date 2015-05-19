@@ -2,14 +2,26 @@
 var mongoose = require('mongoose');
 var Event = require('../models/event.model').Events;
 var _ = require('lodash');
+
+require('../models/user.model');
+var User = mongoose.model('User');
 // var JoinedUser = mongoose.model('JoinedUser');
 
 exports.createEvent = function(req, res){
-  Event.create(req.body, function(err, events){
+  Event.create(req.body, function(err, event){
     if (err){
       res.send(err);
+    } else {
+        User.findById(event.userId, function(err, user) {
+        if (err) {
+          res.send(err);
+        }
+        user.eventsCreated.push(event._id);
+        user.save(function(err) {
+          res.json(event);
+        });
+      });
     }
-    res.json(events);
   });
 };
 
