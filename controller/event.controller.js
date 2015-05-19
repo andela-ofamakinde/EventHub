@@ -25,6 +25,16 @@ exports.createEvent = function(req, res){
   });
 };
 
+exports.getUserEvents = function(req, res) {
+  var userid = req.params.userid;
+  Event.find({userId: userid}).populate('userId').exec(function(err, events) {
+    if (err) {
+      return res.json(err);
+    }
+    res.json(events);
+  });
+};
+
 exports.getAllEvents = function(req, res){
   Event.find(function(err, events){
     if (err){
