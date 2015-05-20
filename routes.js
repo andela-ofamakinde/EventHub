@@ -27,7 +27,7 @@ module.exports = function(app) {
 
   app.put('/event/:event_id', eventCtrl.updateEvent);
 
-  app.post('/:event_id/joinevent', userCtrl.ensureAuthorized, eventCtrl.joinEvent);
+  app.post('/event/:event_id/joinevent', userCtrl.ensureAuthorized, eventCtrl.joinEvent);
 
   app.get('/events/:userid/joined', eventCtrl.getEventsJoined); 
 

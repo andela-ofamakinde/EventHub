@@ -96,7 +96,7 @@ exports.deleteUser = function(req, res){
 
 exports.ensureAuthorized = function(req, res, next) {
   
-  var token = req.body.token || req.query.token || req.headers['x-access-tokenAdd'];
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
   if (token) {
     jwt.verify(token, config.secret, function(err, user) {      
