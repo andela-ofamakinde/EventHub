@@ -26,7 +26,7 @@ exports.getUserEvents = function(req, res) {
 };
 
 exports.getEventsJoined = function(req, res) {
-  Event.find({userId: req.params.userid}).populate('userId').exec(function(err, events){
+  Event.find({joinedUsers: req.params.userid}).exec(function(err, events){
     if(err){
       return res.json(err);
     }
@@ -66,7 +66,7 @@ exports.joinEvent = function(req, res) {
     if (err) {
       res.json(err);
     }
-    var added = event.joinedUsers.addToSet(req.body.userid);
+    var added = event.joinedUsers.addToSet(req.user._id);
     if (!added.length) {
       res.status(400).json({'message': 'duplicate userid'});
     } else {
