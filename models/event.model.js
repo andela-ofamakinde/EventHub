@@ -3,13 +3,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var joinedUserSchema = new Schema ({
-  user: {
-    type: String,
-    unique: true
-  }
-});
-
 var eventSchema = new Schema({
   title: {
     type: String,
@@ -41,7 +34,10 @@ var eventSchema = new Schema({
     ref: 'User',
     required: "Please enter the user ID"
   },
-  joinedUsers: [joinedUserSchema]
+  joinedUsers: [{
+    type: Schema.ObjectId,
+    ref: 'User'
+  }]
   
 });
 

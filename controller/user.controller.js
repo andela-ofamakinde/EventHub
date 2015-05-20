@@ -96,14 +96,14 @@ exports.deleteUser = function(req, res){
 
 exports.ensureAuthorized = function(req, res, next) {
   
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+  var token = req.body.token || req.query.token || req.headers['x-access-tokenAdd'];
 
   if (token) {
-    jwt.verify(token, config.secret, function(err, decoded) {      
+    jwt.verify(token, config.secret, function(err, user) {      
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });    
       } else {
-        req.decoded = decoded;    
+        req.user = user;    
         next();
       }
     });

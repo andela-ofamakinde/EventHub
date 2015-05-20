@@ -7,18 +7,31 @@ module.exports = function(app) {
 
   //USER ROUTES
   app.post('/signup', userCtrl.createUser);
+
   app.post('/signin', userCtrl.signIn);
+
   app.get('/allusers', userCtrl.getAllUser);
+
   app.get('/users/:user_id', userCtrl.getOneUser);
+
   app.delete('/:user_id', userCtrl.deleteUser);
 
   // EVENT ROUTES
   app.post('/createevent', eventCtrl.createEvent);
+
   app.get('/allevents', eventCtrl.getAllEvents);
-  app.get('/:event_id', eventCtrl.getOneEvent);
+
+  app.get('/event/:event_id', eventCtrl.getOneEvent);
+
   app.get('/events/:userid', eventCtrl.getUserEvents);
-  app.put('/:event_id', eventCtrl.updateEvent);
-  app.post('/:event_id/joinevent', eventCtrl.joinEvent);
+
+  app.put('/event/:event_id', eventCtrl.updateEvent);
+
+  app.post('/:event_id/joinevent', userCtrl.ensureAuthorized, eventCtrl.joinEvent);
+
+  app.get('/events/:userid/joined', eventCtrl.getEventsJoined); 
+
   app.get('/:event_id/viewusers', eventCtrl.viewUsers);
-  app.delete('/:event_id', eventCtrl.deleteEvent);
+
+  app.delete('/event/:event_id', eventCtrl.deleteEvent);
 };
