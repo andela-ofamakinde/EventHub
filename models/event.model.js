@@ -3,13 +3,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-// var joinedUserSchema = new Schema ({
-//   user: {
-//     type: String,
-//     unique: true
-//   }
-// });
-
 var eventSchema = new Schema({
   title: {
     type: String,
@@ -49,6 +42,5 @@ var eventSchema = new Schema({
 });
 
 module.exports = {
-  Events: mongoose.model('Events', eventSchema),
-  // JoinedUsers: mongoose.model('JoinedUsers', joinedUserSchema)
+  Events: mongoose.model('Events', eventSchema)
 };
