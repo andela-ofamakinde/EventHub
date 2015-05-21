@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 var bcrypt = require('bcrypt');
+var _ = require('lodash');
 
 require('../models/user.model');
 var User = mongoose.model('User');
@@ -81,6 +82,23 @@ exports.getOneUser = function(req, res) {
       res.json(user);
   });
 };
+
+exports.updateUser = function(req, res) {
+  User.findById(req.params.user_id, function(err, user) {
+    if(err) {
+      res.send(err);
+    } else {
+      user = _.extend(user, req.body);
+      user.save(function(err, user) {
+        if (err) {
+          res.send(err);
+        }
+        res.json(user);
+      });
+    }
+  });
+};
+
 
 exports.deleteUser = function(req, res){
   User.remove({

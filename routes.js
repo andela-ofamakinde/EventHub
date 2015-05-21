@@ -14,6 +14,8 @@ module.exports = function(app) {
 
   app.get('/users/:user_id', userCtrl.getOneUser);
 
+  app.put('/user/:user_id', userCtrl.updateUser);
+
   app.delete('/:user_id', userCtrl.deleteUser);
 
   // EVENT ROUTES
