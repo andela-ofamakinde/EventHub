@@ -4,26 +4,28 @@ var express = require('express');
 require('../routes');
 var myApp = require('../server');
 var tester = require('supertest')(myApp);
-var events =mongoose.model('events');
+// var events =mongoose.model('events');
+var Event = require('../models/event.model').Events;
+
 var newEvent;
 
 describe('my api', function(){
 
-  beforeEach(function(done){
-    newEvent = new events({
-      title: 'cinema time',
-      description: "fun time",
-      startdate: Date.now(),
-      enddate: Date.now(),
-      categories: 'party'
-    });
-    newEvent.save(function(err){
-      if(err) {
-        console.log(err);
-      }
-    });
-    done();
-  });
+  // beforeEach(function(done){
+  //   newEvent = new Event({
+  //     title: 'cinema time',
+  //     description: "fun time",
+  //     startdate: Date.now(),
+  //     enddate: Date.now(),
+  //     categories: 'party'
+  //   });
+  //   newEvent.save(function(err){
+  //     if(err) {
+  //       console.log(err);
+  //     }
+  //   });
+  //   done();
+  // });
 
   it('should return an error message for a non existing route', function(done){
     tester

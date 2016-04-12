@@ -1,86 +1,90 @@
 "use strict";
-var mongoose = require('mongoose');
-var Event = require('../models/event.model').Events;
-var _ = require('lodash');
-// var JoinedUser = mongoose.model('JoinedUser');
+require('../models/event.model');
+require('../models/user.model');
+
+var mongoose = require('mongoose'),
+    _ = require('lodash'),
+    Event = mongoose.model("Event"),
+    User = mongoose.model("User"),
+    populateQuery = [{ path: 'createdBy', select: 'firstname lastname email' }];
 
 exports.createEvent = function(req, res){
-  Event.create(req.body, function(err, events){
-    if (err){
-      res.send(err);
+  var newEvent = new Event({
+    title : req.body.title,
+    description : req.body.description,
+    startDate : req.body.startDate,
+    endDate : req.body.endDate,
+    category : req.body.category,
+    location : req.body.location,
+    createdBy: req.params.userId
+  });
+
+  newEvent.save(function(err, event){
+    if (err) {
+      return res.send(err);
     }
-    res.json(events);
+    User.findById(req.params.userId, function(err, user) {
+      if (err){
+        res.send(err);
+      }
+      user.eventsCreated.push(event);
+      user.save(function(err) {
+        if (err) {                            
+          res.json(400, { message: 'Error while creating event ' + err});
+        }
+      });
+    });
+    res.send(event);
   });
 };
 
 exports.getAllEvents = function(req, res){
-  Event.find(function(err, events){
-    if (err){
-      res.send(err);
-    }
-    res.json(events);
-  });
+  Event.find({})
+    .populate(populateQuery)
+    .exec(function(err, events) {
+        if (err) {
+            return res.send(err);
+        }
+        res.json(events);
+    });
 };
 
 exports.getOneEvent = function(req, res) {
-  Event.findById(req.params.event_id, function(err, event) {
-    if (err){
-      res.send(err);
-    }
-      res.json(event);
-  });
+  Event.findById({_id : req.params.eventId})
+    .populate(populateQuery)
+    .exec(function(err, events) {
+      if (err) {
+        return res.send(err);
+      }
+      res.json(events);
+      });
 };
 
 exports.updateEvent = function(req, res) {
-  Event.findById(req.params.event_id, function(err , event) {
+  Event.findById(req.params.eventId, function(err , events) {
     if(err){
       res.send(err);
     }
 
-    event.title = req.body.title;
-    event.description = req.body.description;
+    if (req.body.title) events.title = req.body.title;
+    if (req.body.description) events.description = req.body.description;
+    if (req.body.location) events.location = req.body.location;  
+    if (req.body.category) events.category = req.body.category;
+    if (req.body.startdate) events.startdate = req.body.startdate;
+    if (req.body.enddate) events.enddate = req.body.enddate;
 
-    event.save(function(err){
+    events.save(function(err){
       if (err){
         res.send(err);
       }
-      res.json(event);
+      res.json(events);
     });
   });
 
 };
 
-exports.joinEvent = function(req, res) {
-
-  Event.findById(req.params.event_id, function(err, events) {
-    
-    if(err) return err;
-    if(events.joinedUsers.length === 0){
-      events.joinedUsers.push(req.body);
-      events.save(function(err){
-        if (err){
-          res.send(err);
-        }
-        res.json(events);
-        });
-    }
-    else {
-      if(!_.result(_.find(events.joinedUsers, req.body), 'user')){
-            events.joinedUsers.push(req.body);
-            events.save(function(err){
-              if (err){
-                res.send(err);
-              }
-              res.json(events);
-            });
-          }
-          else return res.json('userId exist');
-      }
-  });
-};
-
 exports.deleteEvent = function(req, res) {
-  Event.remove({ _id : req.params.event_id}, function(err, event){
+  Event.remove({ _id : req.params.eventId}, function(err, events){
     if(err) {
       res.send(err);
     }
@@ -88,13 +92,24 @@ exports.deleteEvent = function(req, res) {
   });
 };
 
-exports.viewUsers = function(req, res) {
-  Event.findById(req.params.event_id, function(err , event) {
-    if(err){
+exports.joinEvent = function(req, res) {
+  Event.findById(req.body.eventId, function(err, events) {
+    if (err){
       res.send(err);
     }
-    res.send(event.joinedUsers);
+    else {
+      User.findById(req.params.userId, function(err, user) {
+        if (err){
+          res.send(err);
+        }
+        user.eventsJoined.push(events);
+        user.save(function(err) {
+          if (err) {                            
+            res.json(400, { message: 'Error when trying to event ' + err});
+          }
+          res.json(events);
+        });
+      });
+    }
   });
-};
-
-
+}

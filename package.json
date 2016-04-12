@@ -4,8 +4,8 @@
   "description": "An application that uses MEAN stack",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "tests": "jasmine-node specs/*.js",
+    "start": "node server.js",
+    "test": "jasmine-node specs/*.js",
     "test-user-route": "jasmine-node specs/user.route.spec.js",
     "test-event-route": "jasmine-node specs/event.route.spec.js",
     "test-user": "jasmine-node specs/user.model.spec.js",

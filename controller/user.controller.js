@@ -1,25 +1,79 @@
 "use strict";
-var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken');
-var config = require('../config/config');
-var bcrypt = require('bcrypt');
-
 require('../models/user.model');
-var User = mongoose.model('User');
+
+var mongoose = require('mongoose'),
+    jwt = require('jsonwebtoken'),
+    config = require('../config/config'),
+    bcrypt = require('bcrypt-nodejs'),
+    User = mongoose.model('User'),
+    populateQuery = [{ path: 'eventsCreated', select: 'title description category location' }, 
+                    { path: 'eventsJoined', select: 'title description category location' }];
 
 exports.createUser = function(req, res){
   var user = req.body;
 
-  bcrypt.hash(req.body.password, 10, function(err, hash) {
-    user.password = hash;
+  User.create(user, function(err, user) {
+    if (err) {
+    // duplicate entry
+      if (err.code == 11000)
+        return res.json({ success: false, message: 'A user with that email already exists. '});
+      else
+        return res.send(err);
+    }
+    res.send(user);
+  });
+};
 
-    User.create(user, function(err, user) {
+exports.getAllUsers = function(req, res){
+  User.find({})
+    .populate(populateQuery)
+    .exec(function(err, user) {
+        if (err) {
+            return res.send(err);
+        }
+        res.json(user);
+    });
+};
+
+exports.getOneUser = function(req, res) {
+  User.find({_id : req.params.userId})
+    .populate(populateQuery)
+    .exec(function(err, user) {
+        if (err) {
+            return res.send(err);
+        }
+        res.json(user);
+    });
+};
+
+exports.deleteUser = function(req, res){
+  User.remove({
+       _id : req.params.userId
+      },
+    function(err, user){
+      if (err){
+        res.send(err);
+      }
+      res.json("User successfully deleted");
+  });
+};
+
+exports.updateUser = function(req, res) {
+  User.findById(req.params.userId, function(err, user){
+    if (err){
+      res.send(err);
+    }
+    if (req.body.firstname) user.firstname = req.body.firstname;
+    if (req.body.lastname) user.lastname = req.body.lastname;
+    if (req.body.email) user.email = req.body.email;  
+    if (req.body.password) user.password = req.body.password;
+
+    user.save(function(err){
       if (err) {
         res.send(err);
-      } 
-      res.send(user);
-    });
-
+      }
+      res.json(user);
+    })
   });
 };
 
@@ -29,7 +83,7 @@ exports.signIn = function(req, res){
 
       if (!user) {
         res.json({ success: false,
-          message: 'Authentication failed. Incorrect email/password.' 
+          message: 'Incorrect user email.' 
         });
 
       } else if (user) {
@@ -43,67 +97,17 @@ exports.signIn = function(req, res){
             res.send(err);
           } 
 
-          if (!valid) { return res.status(401).send('Wrong Password'); }
-
-          res.json({
-            success: true,
-            message: 'Enjoy your token',
-            token: token
-          });
-
+          if (!valid) { 
+            return res.status(401).send('Wrong Password');
+          }
+          else {
+            res.json({
+              success: true,
+              message: 'Enjoy your token',
+              token: token
+            });
+          }
         });
       }
   });
-};
-
-exports.getAllUser = function(req, res){
-  User.find(function(err, user){
-    if (err){
-      return res.send(err);
-    }
-    res.json(user);
-  });
-};
-
-exports.getOneUser = function(req, res) {
-  User.findById(req.params.user_id, function(err, user) {
-    if (err){
-      res.send(err);
-    }
-      res.json(user);
-  });
-};
-
-exports.deleteUser = function(req, res){
-  User.remove({
-       _id : req.params.user_id
-      },
-    function(err, user){
-      if (err){
-        res.send(err);
-      }
-      res.json(user);
-  });
-};
-
-exports.ensureAuthorized = function(req, res, next) {
-  
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-  if (token) {
-    jwt.verify(token, config.secret, function(err, decoded) {      
-      if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });    
-      } else {
-        req.decoded = decoded;    
-        next();
-      }
-    });
-
-  } else {
-    return res.status(403).send({ 
-      success: false, 
-      message: 'No token provided.' 
-    });
-  }
 };

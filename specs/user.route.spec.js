@@ -3,13 +3,13 @@ var mongoose = require('mongoose');
 require('../routes');
 var myApp = require('../server');
 var tester = require('supertest')(myApp);
-var user =mongoose.model('user');
+var User =mongoose.model('User');
 var newUser;
 
 describe('my api', function(){
 
   beforeEach(function(done){
-    newUser = new user({
+    newUser = new User({
       firstname: 'olatoyosi',
       lastname: "fam",
       password: "sugar",

@@ -1,23 +1,39 @@
 "use strict";
+var express = require('express');
+var app = express();
+var userRouter = express.Router();
+var eventRouter = express.Router();
 
 module.exports = function(app) {
 
   var userCtrl = require('./controller/user.controller');
   var eventCtrl = require('./controller/event.controller');
+  var authCtrl = require('./controller/auth.controller');
 
-  //USER ROUTES
-  app.post('/signup', userCtrl.createUser);
-  app.post('/signin', userCtrl.signIn);
-  app.get('/allusers', userCtrl.getAllUser);
-  app.get('/allusers/user/:user_id', userCtrl.getOneUser);
-  app.delete('/allusers/:user_id', userCtrl.deleteUser);
+  // USER ROUTES
+  userRouter.route('/')
+    .post(userCtrl.createUser)
+    .get(userCtrl.getAllUsers);
+
+  userRouter.post('/login', userCtrl.signIn);
+
+  userRouter.route('/:userId')
+    .get(authCtrl.ensureAuthorized, userCtrl.getOneUser)
+    .put(authCtrl.ensureAuthorized, userCtrl.updateUser)
+    .delete(authCtrl.ensureAuthorized, userCtrl.deleteUser);
+
+  userRouter.post('/:userId/addevent', eventCtrl.createEvent);
+  userRouter.post('/:userId/joinevent', eventCtrl.joinEvent);
 
   // EVENT ROUTES
-  app.post('/createevent', eventCtrl.createEvent);
-  app.get('/allevents', eventCtrl.getAllEvents);
-  app.get('/allevents/:event_id', eventCtrl.getOneEvent);
-  app.put('/allevents/:event_id', eventCtrl.updateEvent);
-  app.post('/allevents/:event_id/joinevent', eventCtrl.joinEvent);
-  app.get('/allevents/:event_id/viewusers', eventCtrl.viewUsers);
-  app.delete('/deleteEvent/:event_id', eventCtrl.deleteEvent);
+  eventRouter.route('/')
+    .get(eventCtrl.getAllEvents)
+
+  eventRouter.route('/:eventId')
+    .get(eventCtrl.getOneEvent)
+    .put(eventCtrl.updateEvent)
+    .delete(eventCtrl.deleteEvent);
+
+  app.use('/users', userRouter);
+  app.use('/events', eventRouter);
 };
