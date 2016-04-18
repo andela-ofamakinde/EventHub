@@ -36,7 +36,7 @@ exports.getAllUsers = function(req, res){
 };
 
 exports.getOneUser = function(req, res) {
-  User.find({_id : req.params.userId})
+  User.findOne({_id : req.params.userId})
     .populate(populateQuery)
     .exec(function(err, user) {
         if (err) {
