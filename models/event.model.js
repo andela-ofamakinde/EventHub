@@ -14,11 +14,11 @@ var eventSchema = new Schema({
     required: 'Please enter a brief description'
   },
   startDate: {
-    type: Date,
+    type: Date
     // required: 'Please enter the date'
   },
   endDate: {
-    type: Date,
+    type: Date
     // required: 'Please enter the end date'
   },
   category: {

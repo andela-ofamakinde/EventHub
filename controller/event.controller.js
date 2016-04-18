@@ -18,7 +18,6 @@ exports.createEvent = function(req, res){
     location : req.body.location,
     createdBy: req.params.userId
   });
-
   newEvent.save(function(err, event){
     if (err) {
       return res.send(err);
@@ -29,7 +28,7 @@ exports.createEvent = function(req, res){
       }
       user.eventsCreated.push(event);
       user.save(function(err) {
-        if (err) {                            
+        if (err) {
           res.json(400, { message: 'Error while creating event ' + err});
         }
       });
@@ -50,7 +49,7 @@ exports.getAllEvents = function(req, res){
 };
 
 exports.getOneEvent = function(req, res) {
-  Event.findById({_id : req.params.eventId})
+  Event.findOne({_id : req.params.eventId})
     .populate(populateQuery)
     .exec(function(err, events) {
       if (err) {
@@ -98,18 +97,63 @@ exports.joinEvent = function(req, res) {
       res.send(err);
     }
     else {
-      User.findById(req.params.userId, function(err, user) {
-        if (err){
-          res.send(err);
+      User.findOne({_id : req.params.userId})
+      .where("eventsJoined")
+      .in([req.body.eventId])
+      .exec(function(err, user){
+        if (err) {
+          return res.send(err);
         }
-        user.eventsJoined.push(events);
-        user.save(function(err) {
-          if (err) {                            
-            res.json(400, { message: 'Error when trying to event ' + err});
-          }
-          res.json(events);
+        if (user) {
+          return res.send("You already joined");
+        }
+        pushToJoinedEvents(req, res, req.params.userId, events);
         });
+    }
+  });
+};
+
+exports.leaveEvent = function(req, res) {
+  Event.findById(req.body.eventId, function(err, events) {
+    if (err){
+      res.send(err);
+    }
+    else {
+      User.findOne({_id : req.params.userId})
+      .where("eventsJoined")
+      .in([req.body.eventId])
+      .exec(function(err, user){
+        if (err) {
+          return res.send(err);
+        }
+        if(!user) {
+          res.send("You were not added to this event")
+        }
+        if (user) {
+          user.eventsJoined.pop(events);
+          user.save(function(err) {
+            if (err) {                            
+              res.send(400, { message: 'Error when trying to leave event ' + err});
+            }
+            res.send("You have left this event successfully");
+          });
+        }
       });
     }
   });
-}
+};
+
+var pushToJoinedEvents = function(req, res, userId, events) {
+  User.findOne({_id : userId}, function(err, new_user){
+    if (err){
+      res.send(err);
+    }
+    new_user.eventsJoined.push(events);
+    new_user.save(function(err, user) {
+      if (err) {                            
+        res.send(400, { message: 'Error when trying to join event ' + err});
+      }
+      res.send("You have joined this event successfully");
+    });
+  });
+};

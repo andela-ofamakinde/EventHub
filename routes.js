@@ -15,15 +15,15 @@ module.exports = function(app) {
     .post(userCtrl.createUser)
     .get(userCtrl.getAllUsers);
 
-  userRouter.post('/login', userCtrl.signIn);
-
   userRouter.route('/:userId')
     .get(authCtrl.ensureAuthorized, userCtrl.getOneUser)
     .put(authCtrl.ensureAuthorized, userCtrl.updateUser)
     .delete(authCtrl.ensureAuthorized, userCtrl.deleteUser);
 
+  userRouter.post('/login', userCtrl.signIn);
   userRouter.post('/:userId/addevent', eventCtrl.createEvent);
   userRouter.post('/:userId/joinevent', eventCtrl.joinEvent);
+  userRouter.post('/:userId/leaveevent', eventCtrl.leaveEvent);
 
   // EVENT ROUTES
   eventRouter.route('/')
